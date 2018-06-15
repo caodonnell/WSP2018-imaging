@@ -4,15 +4,12 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 from astropy.io import fits
+import requests
 
 #ignore image size warnings
 import warnings
 #warnings.simplefilter("ignore")
 warnings.filterwarnings("ignore", message="Image size")
-
-def testfunc(n):
-    print(n)
-    return
 
 #function to resize an opened image
 def resize_img(img, newscale, img_width, img_height):
@@ -107,5 +104,10 @@ def splitRGB(img_name='rainbowvalley.jpg', flip=True):
         outfits = fits.PrimaryHDU(data=outdata)    
         outfits.writeto(fname)
     return
-        
+ 
+def downloader(url, fname='file.png'):
+    f = open(fname, 'wb')
+    f.write(requests.get(url).content)
+    f.close()
+    return
     
