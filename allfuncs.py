@@ -1,4 +1,4 @@
-import os#, sys, glob, time
+import os, time
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore", message="Image size")
 
 #function to resize an opened image
-def resize_img(img, newscale, img_width, img_height):
+def rescale_img(img, newscale, img_width, img_height):
     px_width, px_height = img.size
     widthscale = 1.0*img_width/px_width
     heightscale = 1.0*img_height/px_height
@@ -31,12 +31,12 @@ def resize_img(img, newscale, img_width, img_height):
 
 #scale and img width/height have to be in same distance units
 #in this case, miles
-def resize(newscale, img_name='lestermadeline_BW.jpg', img_width=2600, img_height=1600):
+def rescale(newscale, img_name="lestermadeline_BW.jpg", img_width=2600, img_height=1600):
     img = Image.open(img_name)
  
     fig = plt.figure()
 
-    new_img = resize_img(img, newscale, img_width, img_height)
+    new_img = rescale_img(img, newscale, img_width, img_height)
     imshow(np.asarray(new_img), cmap='gray')
     plt.axis('off')
     
@@ -50,6 +50,9 @@ def rebin_func(value, imgscale):
 
 #function takes an opened image to rebin
 def rebin_img(img, nbins):
+    bands = img.getbands()
+    if len(bands) > 1: img = img.convert('L')
+    
     imgarray = np.asarray(img)
     
     if nbins < 0:
@@ -64,9 +67,8 @@ def rebin_img(img, nbins):
     return [[rebin_func(val, imgscale) for val in x] for x in imgarray]
         
 
-def rebin(nbins, img_name='lestermadeline_BW_5mile.jpg'):
+def rebin(nbins, img_name="lestermadeline_BW_5mile.jpg"):
     img = Image.open(img_name)
-    imgarray = np.asarray(img)
     
     new_img = rebin_img(img, nbins)
     
@@ -79,9 +81,9 @@ def rebin(nbins, img_name='lestermadeline_BW_5mile.jpg'):
     
     return 
 
-def pix_and_bins(scale=100, bins=10, img_name='lestermadeline_BW_5mile.jpg', img_width=2600, img_height=1600):
+def rescale_rebin(scale=100, bins=10, img_name="lestermadeline_BW_5mile.jpg", img_width=2600, img_height=1600):
     img = Image.open(img_name)
-    resized = resize_img(img, scale, img_width, img_height)
+    resized = rescale_img(img, scale, img_width, img_height)
     recolored = rebin_img(resized, bins)
     
     fig = plt.figure()
@@ -92,7 +94,7 @@ def pix_and_bins(scale=100, bins=10, img_name='lestermadeline_BW_5mile.jpg', img
     return
 
 
-def splitRGB(img_name='rainbowvalley.jpg', flip=True):
+def splitRGB(img_name="rainbowvalley.jpg", flip=True):
     img = Image.open(img_name)
     bands = img.getbands()
     r,g,b = img.split()
@@ -105,8 +107,8 @@ def splitRGB(img_name='rainbowvalley.jpg', flip=True):
         outfits.writeto(fname)
     return
  
-def downloader(url, fname='file.png'):
-    f = open(fname, 'wb')
+def downloader(url, img_name):
+    f = open(img_name, 'wb')
     f.write(requests.get(url).content)
     f.close()
     return
