@@ -4,7 +4,9 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 from astropy.io import fits
-import requests
+import requests, zipfile
+from ipywidgets import interact, interactive
+from IPython.display import display
 
 #ignore image size warnings
 import warnings
@@ -45,8 +47,8 @@ def rescale(newscale, img_name="lestermadeline_BW.jpg", img_width=2600, img_heig
     return 
 
 #function to help with rebinning a grey scale image
-def rebin_func(value, imgscale):
-    return np.where(imgscale <= value)[0][-1]
+def rebin_func(value, imgscale, truescale):
+    return truescale[np.where(imgscale <= value)[0][-1]]
 
 #function takes an opened image to rebin
 def rebin_img(img, nbins):
@@ -58,16 +60,38 @@ def rebin_img(img, nbins):
     if nbins < 0:
         print("Warning: the number of bins has to be greater than 0; defaulting to 1 bin")
         nbins = 0
-    if nbins > 255:
-        print("Warning: maximum number of bins available is 255")
+    if nbins > 256:
+        print("Warning: maximum number of bins available is 256")
         
     imgmin = np.min(imgarray)
     imgmax = np.max(imgarray)
     imgscale = np.linspace(imgmin, imgmax, nbins+1)
-    return [[rebin_func(val, imgscale) for val in x] for x in imgarray]
+    truescale = np.linspace(0, 255, nbins+1)
+    return [[rebin_func(val, imgscale, truescale) for val in x] for x in imgarray]
+
+
+def rebin_rgb_func(img, nbins):
+    return Image.fromarray(np.uint8(rebin_img(img, nbins)))
+
+
+def rebin_RGB(nbins, img_name="monterey.png"):
+    img = Image.open(img_name)
+    r,g,b = img.split()
+    rnew = rebin_rgb_func(r, nbins)
+    gnew = rebin_rgb_func(g, nbins)
+    bnew = rebin_rgb_func(b, nbins)
+    new_img = Image.merge("RGB",(rnew, gnew, bnew))
+    
+    fig = plt.figure()
+    imshow(new_img)
+    plt.axis('off')
+    plt.show()
+    
+    return 
         
 
 def rebin(nbins, img_name="lestermadeline_BW_5mile.jpg"):
+    nbins = int(nbins)
     img = Image.open(img_name)
     
     new_img = rebin_img(img, nbins)
@@ -93,18 +117,37 @@ def rescale_rebin(scale=100, bins=10, img_name="lestermadeline_BW_5mile.jpg", im
 
     return
 
+def rescale_rebin_RGB(scale=10, bins=10, img_name="Disneyland.png", img_width=390, img_height=220):
+    img = Image.open(img_name)
+    resized = rescale_img(img, scale, img_width, img_height)
+    recolored = rebin_rgb_func(resized, bins)
+    
+    fig = plt.figure()
+    imshow(recolored)
+    plt.axis('off')
+    plt.show()
+
+    return
+
 
 def splitRGB(img_name="rainbowvalley.jpg", flip=True):
     img = Image.open(img_name)
-    bands = img.getbands()
+    bandnames = img.getbands()
     r,g,b = img.split()
-    for band, name in zip([r,g,b], bands):
-        fname = img_name.split('.')[0]+'_'+name+'.fits'
+    outnames = [img_name.split('.')[0]+'_'+band+'.fits' for band in bandnames]
+    for band_data, fname in zip([r,g,b], outnames):
         if os.path.exists(fname): os.system('rm '+fname)
-        outdata = np.asarray(band)
+        outdata = np.asarray(band_data)
         if flip: outdata = np.flipud(outdata)
         outfits = fits.PrimaryHDU(data=outdata)    
         outfits.writeto(fname)
+        
+    zf = zipfile.ZipFile(img_name.split('.')[0]+".zip", "w")    
+    for fname in outnames: zf.write(fname)
+    zf.close()
+    
+    for fname in outnames: os.system('rm '+fname)
+        
     return
  
 def downloader(url, img_name):
