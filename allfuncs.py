@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 from astropy.io import fits
 import requests, zipfile
-from ipywidgets import interact, interactive
-from IPython.display import display
+from ipywidgets import interact_manual
+#from IPython.display import display
 
 #ignore image size warnings
 import warnings
