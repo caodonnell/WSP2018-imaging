@@ -17,40 +17,58 @@ warnings.filterwarnings("ignore", message="Image size")
 #---------------------------------------------------------------------------------
 #all of the interactive functions
 
+#def start_rescale():
+#    #v = interact_manual(open_image,image_name="lestermadeline_BW.jpg", image_width=2600, image_height=1600)
+#    #display(v)
+#    width = w.FloatText(value=2600., Text='width')
+#    height = w.FloatText(value=1600., Text='height')
+#    w.interact_manual(open_rescale, name='lestermadeline_BW.jpg', width=width, height=height)
+#    return
+#
+#def open_rescale(name, width, height):
+#    #img_width = float(image_width)
+#    #img_height = float(image_height)
+#    scale = w.FloatText(value=10., Text='scale')
+#    w.interact_manual(rescale, scale=scale, image_name=w.fixed(name), 
+#                      image_width=w.fixed(width), image_height=w.fixed(height))
+#    return
+
+
 def start_rescale():
-    #v = interact_manual(open_image,image_name="lestermadeline_BW.jpg", image_width=2600, image_height=1600)
-    #display(v)
     width = w.FloatText(value=2600., Text='width')
     height = w.FloatText(value=1600., Text='height')
-    w.interact_manual(open_rescale, name='lestermadeline_BW.jpg', width=width, height=height)
-    return
-
-def open_rescale(name, width, height):
-    #img_width = float(image_width)
-    #img_height = float(image_height)
     scale = w.FloatText(value=10., Text='scale')
-    w.interact_manual(rescale, scale=scale, image_name=w.fixed(name), 
-                      image_width=w.fixed(width), image_height=w.fixed(height))
+    w.interact(rescale, scale=scale, name='lestermadeline_BW.jpg', width=width, height=height)
     return
 
 
 def start_rebin():
-    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+    #bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+    bins = w.BoundedIntText(value=10, min=1, max=256, step=1,description='bins')
     w.interact(rebin, name='lestermadeline_BW_5mile.jpg', bins=bins)
     return
+
+#def start_rescale_rebin():
+#    width = w.FloatText(value=2600., Text='width')
+#    height = w.FloatText(value=1600., Text='height')
+#    w.interact_manual(open_rescale_rebin, name='lestermadeline_BW.jpg', width=width, height=height)
+#    return 
+#
+#def open_rescale_rebin(name, width, height):
+#    scale = w.FloatText(value=10., Text='scale')
+#    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+#    w.interact_manual(rescale_rebin, scale=scale, bins=bins, img_name=w.fixed(name), 
+#                      img_width=w.fixed(width), img_height=w.fixed(height))
+#    return
 
 def start_rescale_rebin():
     width = w.FloatText(value=2600., Text='width')
     height = w.FloatText(value=1600., Text='height')
-    w.interact_manual(open_rescale_rebin, name='lestermadeline_BW.jpg', width=width, height=height)
-    return 
-
-def open_rescale_rebin(name, width, height):
     scale = w.FloatText(value=10., Text='scale')
-    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
-    w.interact_manual(rescale_rebin, scale=scale, bins=bins, img_name=w.fixed(name), 
-                      img_width=w.fixed(width), img_height=w.fixed(height))
+    bins = w.BoundedIntText(value=10, min=1, max=256, step=1,description='bins')
+    w.interact(rescale_rebin, scale=scale, bins=bins, name='lestermadeline_BW.jpg', width=width, height=height)
     return
+    
 
 def start_splitRGB():
     w.interact_manual(splitRGB, name='rainbowvalley.jpg', flip=w.fixed(True))
@@ -61,21 +79,30 @@ def download():
     return
 
 def start_rebin_RGB():
-    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+    #bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+    bins = w.BoundedIntText(value=10, min=1, max=256, step=1,description='bins')
     w.interact(rebin_RGB, name='Disneyland.png', bins=bins)
     return
+
+#def start_rescale_rebin_RGB():
+#    width = w.FloatText(value=2600., Text='width')
+#    height = w.FloatText(value=1600., Text='height')
+#    w.interact_manual(open_rescale_rebin_RGB, name='lestermadeline_BW.jpg', width=width, height=height)
+#    return 
+#
+#def open_rescale_rebin_RGB(name, width, height):
+#    scale = w.FloatText(value=10., Text='scale')
+#    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
+#    w.interact_manual(rescale_rebin_RGB, scale=scale, bins=bins, img_name=w.fixed(name), 
+#                      img_width=w.fixed(width), img_height=w.fixed(height))
 
 def start_rescale_rebin_RGB():
     width = w.FloatText(value=2600., Text='width')
     height = w.FloatText(value=1600., Text='height')
-    w.interact_manual(open_rescale_rebin_RGB, name='lestermadeline_BW.jpg', width=width, height=height)
-    return 
-
-def open_rescale_rebin_RGB(name, width, height):
     scale = w.FloatText(value=10., Text='scale')
-    bins = w.IntSlider(value=10, min=1, max=256, step=1,description='bins', continuous_update=False)
-    w.interact_manual(rescale_rebin_RGB, scale=scale, bins=bins, img_name=w.fixed(name), 
-                      img_width=w.fixed(width), img_height=w.fixed(height))
+    bins = w.BoundedIntText(value=10, min=1, max=256, step=1,description='bins')
+    w.interact(rescale_rebin_RGB, scale=scale, bins=bins, name='Disneyland.png', width=width, height=height)
+    return
     
 
 #---------------------------------------------------------------------------------
@@ -106,12 +133,12 @@ def rescale_img(img, newscale, img_width, img_height):
 
 #scale and img width/height have to be in same distance units
 #in this case, miles
-def rescale(scale, image_name="lestermadeline_BW.jpg", image_width=2600, image_height=1600):
-    img = Image.open(image_name)
+def rescale(scale, name="lestermadeline_BW.jpg", width=2600, height=1600):
+    img = Image.open(name)
  
     fig = plt.figure()
-    newscale = scale
-    new_img = rescale_img(img, newscale, image_width, image_height)
+
+    new_img = rescale_img(img, scale, width, height)
     imshow(np.asarray(new_img), cmap='gray')
     plt.axis('off')
     
@@ -197,9 +224,9 @@ def rebin_RGB(bins, name="monterey.png"):
 #---------------------------------------------------------------------------------
 #functions to combine the rescale and rebin methods
 
-def rescale_rebin(scale=100, bins=10, img_name="lestermadeline_BW_5mile.jpg", img_width=2600, img_height=1600):
-    img = Image.open(img_name)
-    resized = rescale_img(img, scale, img_width, img_height)
+def rescale_rebin(scale=100, bins=10, name="lestermadeline_BW_5mile.jpg", width=2600, height=1600):
+    img = Image.open(name)
+    resized = rescale_img(img, scale, width, height)
     recolored = rebin_img(resized, bins)
     
     fig = plt.figure()
@@ -209,9 +236,9 @@ def rescale_rebin(scale=100, bins=10, img_name="lestermadeline_BW_5mile.jpg", im
     img.close()
     return
 
-def rescale_rebin_RGB(scale=10, bins=10, img_name="Disneyland.png", img_width=390, img_height=220):
-    img = Image.open(img_name)
-    resized = rescale_img(img, scale, img_width, img_height)
+def rescale_rebin_RGB(scale=10, bins=10, name="Disneyland.png", width=390, height=220):
+    img = Image.open(name)
+    resized = rescale_img(img, scale, width, height)
     recolored = rebin_rgb_func(resized, bins)
     
     fig = plt.figure()
