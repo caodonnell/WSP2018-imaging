@@ -3,3 +3,4 @@ matplotlib
 pillow
 astropy
 ipywidgets
+jupyter_contrib_nbextensions
