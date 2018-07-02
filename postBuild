@@ -3,7 +3,8 @@ jupyter nbextension enable --py widgetsnbextension
 jupyter nbextension enable python-markdown/main
 
 # Notebooks w/ extensions that auto-run code must be "trusted" to work the first time
-jupyter trust pixels.ipynb
-jupyter trust greyscale.ipynb
+jupyter trust 1_pixels.ipynb
+jupyter trust 2_grayscale.ipynb
 jupyter trust image_manipulation.ipynb
-jupyter trust RGB.ipynb
+jupyter trust 3_RGB.ipynb
+jupyter trust 4_false_color.ipynb
