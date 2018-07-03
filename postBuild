@@ -8,3 +8,4 @@ jupyter trust 2_grayscale.ipynb
 jupyter trust image_manipulation.ipynb
 jupyter trust 3_RGB.ipynb
 jupyter trust 4_false_color.ipynb
+jupyter trust 5_false_color_part2.ipynb
